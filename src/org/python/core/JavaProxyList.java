@@ -510,7 +510,7 @@ class JavaProxyList {
             // https://hg.python.org/jython/annotate/03d04033c305/src/org/python/core/PyJavaType.java#l1574
             java.lang.System.err.println("Warning: JavaProxyList.remove(" + object.toString() + ") will raise ValueError in Jython 2.7");
             // Maintain same behavior as Jython 2.5
-            return Py.None
+            return Py.None;
             //throw Py.ValueError(object.toString() + " is not in list");
         }
     };
