@@ -508,8 +508,10 @@ class JavaProxyList {
             //                   https://hg.python.org/jython/rev/2aa59e8e0bf8#l1.487
             //                   https://hg.python.org/jython/rev/2aa59e8e0bf8#l4.934
             // https://hg.python.org/jython/annotate/03d04033c305/src/org/python/core/PyJavaType.java#l1574
-            java.lang.System.err.println("Warning: Jython 2.5->2.7 change: JavaProxyList.remove(" + object.toString() + ")");
-            throw Py.ValueError(object.toString() + " is not in list");
+            java.lang.System.err.println("Warning: JavaProxyList.remove(" + object.toString() + ") will raise ValueError in Jython 2.7");
+            // Maintain same behavior as Jython 2.5
+            return Py.None
+            //throw Py.ValueError(object.toString() + " is not in list");
         }
     };
     private static final PyBuiltinMethodNarrow listRAddProxy = new ListMethod("__radd__", 1) {
