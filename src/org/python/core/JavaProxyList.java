@@ -492,6 +492,23 @@ class JavaProxyList {
                     return Py.None;
                 }
             }
+            // https://hg.python.org/jython/file/60972a7a26c5/NEWS#l118
+            // The remove method on such proxied List objects now follows Python
+            // sematics: a ValueError is raised if the item is not found in the
+            // java.util.List. In the past, Java semantics were used, with a
+            // boolean returned indicating if the item was removed or not. Given
+            // how this interacted with Jython, such remove invocations were in 
+            // the past silent, and perhaps were actually a bug.
+            
+            // http://bugs.jython.org/issue2215
+            // https://bitbucket.org/santa4nt/jython/commits/f782988e540709d9adfe3d298c329f9e705f0ce0?at=fix-issue-2215
+            // 7472:03d04033c305 https://hg.python.org/jython/rev/03d04033c305
+            // 7473:ae2a1efe4192 https://hg.python.org/jython/rev/ae2a1efe4192
+            // 7474:2aa59e8e0bf8 https://hg.python.org/jython/rev/2aa59e8e0bf8 (moved from PyJavaType.java to JavaProxyList.java)
+            //                   https://hg.python.org/jython/rev/2aa59e8e0bf8#l1.487
+            //                   https://hg.python.org/jython/rev/2aa59e8e0bf8#l4.934
+            // https://hg.python.org/jython/annotate/03d04033c305/src/org/python/core/PyJavaType.java#l1574
+            java.lang.System.err.println("Warning: Jython 2.5->2.7 change: JavaProxyList.remove(" + object.toString() + ")")
             throw Py.ValueError(object.toString() + " is not in list");
         }
     };
