@@ -179,23 +179,25 @@ class JavaProxyMap {
     private static final PyBuiltinMethodNarrow mapGetItemProxy = new MapMethod("__getitem__", 1) {
         @Override
         public PyObject __call__(PyObject key) {
-            // https://hg.python.org/jython/file/60972a7a26c5/NEWS#l126
-            // Support standard Python semantics for proxied java objects that
-            // implement java.util.Map. Such maps may or may not be concurrent.
-            //
-            // Note that d[key_not_present] no longer returns None, but raises
-            // KeyError, which means this behavior now matches standard dict
-            // semantics.
-            //
-            // http://bugs.jython.org/issue1631
-            // 7370:864bbec6ddb5 https://hg.python.org/jython/rev/864bbec6ddb5#l3.164
-            // 7474:2aa59e8e0bf8 https://hg.python.org/jython/rev/2aa59e8e0bf8#l2.183
-            java.lang.System.err.println("Warning: Jython 2.5->2.7 change: JavaProxyMap.__getitem__(" + key.toString() + ")");
             Object jkey = Py.tojava(key, Object.class);
             if (asMap().containsKey(jkey)) {
                 return Py.java2py(asMap().get(jkey));
             } else {
-                throw Py.KeyError(key);
+                // https://hg.python.org/jython/file/60972a7a26c5/NEWS#l126
+                // Support standard Python semantics for proxied java objects that
+                // implement java.util.Map. Such maps may or may not be concurrent.
+                //
+                // Note that d[key_not_present] no longer returns None, but raises
+                // KeyError, which means this behavior now matches standard dict
+                // semantics.
+                //
+                // http://bugs.jython.org/issue1631
+                // 7370:864bbec6ddb5 https://hg.python.org/jython/rev/864bbec6ddb5#l3.164
+                // 7474:2aa59e8e0bf8 https://hg.python.org/jython/rev/2aa59e8e0bf8#l2.183
+                java.lang.System.err.println("Warning: JavaProxyMap.__getitem__(" + key.toString() + ") will raise KeyError in Jython 2.7");
+                // Maintain same behavior as Jython 2.5
+                return Py.None;
+                //throw Py.KeyError(key);
             }
         }
     };
